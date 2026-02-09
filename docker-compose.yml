@@ -7,9 +7,9 @@ services:
     container_name: blog_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-mydb}
+      POSTGRES_USER: ${POSTGRES_USER:-bloguser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-SecurePassword123}
+      POSTGRES_DB: ${POSTGRES_DB:-blogdb}
     ports:
       - "5432:5432"
     volumes:
@@ -17,7 +17,8 @@ services:
     networks:
       - blog_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user}"]
+      # ⬇️ CORRECTION CRITIQUE : Valeurs en dur correspondant au .env
+      test: ["CMD-SHELL", "pg_isready -U bloguser -d blogdb"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,10 +31,10 @@ services:
     container_name: blog_backend
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-mydb}
-      JWT_SECRET: ${JWT_SECRET:-votre_secret_super_securise_changez_moi}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-bloguser}:${POSTGRES_PASSWORD:-SecurePassword123}@postgres:5432/${POSTGRES_DB:-blogdb}
+      JWT_SECRET: ${JWT_SECRET:-a7f3k9m2p5q8w1e4r6t0y3u7i2o9p4a6s1d8f3g5h7j9k2l4m6n8p0q2r4s6t8u0v2w4x6y8z0}
       PORT: 5000
-      NODE_ENV: production
+      NODE_ENV: ${NODE_ENV:-production}
     ports:
       - "5012:5000"
     depends_on:
@@ -54,7 +55,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:5012/api}
+        VITE_API_URL: ${VITE_API_URL}
     container_name: blog_frontend
     restart: unless-stopped
     ports:

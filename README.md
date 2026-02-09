@@ -2,6 +2,29 @@
 
 Une application web complète de gestion d'articles de blog construite avec React, Node.js, PostgreSQL et Docker. Cette application démontre une architecture full-stack moderne avec authentification JWT, CRUD complet et conteneurisation complète.
 
+## ⚡ Démarrage Rapide
+
+**Pour les utilisateurs qui veulent juste lancer l'application :**
+
+```bash
+# Windows
+start.bat
+
+# Linux/Mac
+./start.sh
+
+# Ou manuellement
+docker-compose up --build -d
+```
+
+**Accès :**
+- Frontend : http://localhost:3012
+- API Backend : http://localhost:5012/api
+
+📖 **Plus de détails ?** Voir [INSTALL.md](INSTALL.md) pour la documentation complète d'installation.
+
+---
+
 ## 🚀 Fonctionnalités
 
 - ✅ **Authentification complète** : Inscription, connexion, gestion de session JWT
@@ -69,7 +92,7 @@ PORT=5000
 NODE_ENV=production
 
 # Variables Frontend
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5012/api
 ```
 
 ⚠️ **Important** : Changez absolument `JWT_SECRET` et `POSTGRES_PASSWORD` en production !
@@ -80,8 +103,8 @@ docker-compose up --build
 ```
 
 L'application sera accessible à :
-- **Frontend** : http://localhost:3000
-- **Backend API** : http://localhost:5000
+- **Frontend** : http://localhost:3012
+- **Backend API** : http://localhost:5012/api
 - **PostgreSQL** : localhost:5432
 
 ## 📚 Documentation API

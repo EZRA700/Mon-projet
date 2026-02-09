@@ -4,6 +4,9 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 
+# Installer OpenSSL pour Prisma
+RUN apk add --no-cache openssl
+
 # Copier les fichiers de dépendances
 COPY package*.json ./
 COPY prisma ./prisma/
@@ -17,6 +20,9 @@ RUN npm install --production && \
 FROM node:20-alpine AS runner
 WORKDIR /app
 
+# Installer OpenSSL pour Prisma
+RUN apk add --no-cache openssl
+
 # Créer un utilisateur non-root pour la sécurité
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 expressjs
@@ -24,12 +30,13 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copier les node_modules depuis l'étape deps
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package*.json ./
+COPY --from=deps /app/prisma ./prisma
 
 # Copier le code source
-COPY --chown=expressjs:nodejs . .
+COPY . .
 
-# Générer le client Prisma
-RUN npx prisma generate
+# Changer les permissions après copie
+RUN chown -R expressjs:nodejs /app
 
 # Changer vers l'utilisateur non-root
 USER expressjs

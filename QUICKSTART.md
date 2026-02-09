@@ -36,13 +36,13 @@ docker-compose up --build -d
 ```
 
 ### 3. Accéder à l'application
-- **Frontend** : http://localhost:3000
-- **Backend API** : http://localhost:5000
-- **Health Check** : http://localhost:5000/health
+- **Frontend** : http://localhost:3012
+- **Backend API** : http://localhost:5012/api
+- **Health Check** : http://localhost:5012/health
 
 ## 🎯 Premiers pas
 
-1. Ouvrez http://localhost:3000
+1. Ouvrez http://localhost:3012
 2. Cliquez sur "S'inscrire"
 3. Créez un compte avec :
    - Nom : Votre nom
@@ -70,12 +70,12 @@ docker-compose logs postgres
 ### Erreur "port already in use"
 ```bash
 # Sur Windows
-netstat -ano | findstr :3000
-netstat -ano | findstr :5000
+netstat -ano | findstr :3012
+netstat -ano | findstr :5012
 
 # Sur Linux/Mac
-lsof -i :3000
-lsof -i :5000
+lsof -i :3012
+lsof -i :5012
 
 # Arrêter et nettoyer
 docker-compose down
@@ -89,13 +89,13 @@ docker-compose up --build
 ```
 
 ### Erreur de connexion API
-Vérifiez que `VITE_API_URL` dans [frontend/.env](frontend/.env) pointe vers http://localhost:5000/api
+Vérifiez que `VITE_API_URL` dans le fichier `.env` à la racine pointe vers http://localhost:5012/api
 
 ## 📝 Tester l'API avec curl
 
 ```bash
 # Health check
-curl http://localhost:5000/health
+curl http://localhost:5012/health
 
 # Inscription
 curl -X POST http://localhost:5000/api/auth/register \

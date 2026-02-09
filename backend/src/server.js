@@ -5,10 +5,17 @@ const authRoutes = require('./routes/auth.routes');
 const articleRoutes = require('./routes/article.routes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5012;
+
+// Configuration CORS
+const corsOptions = {
+  origin: ['http://localhost:3012', 'http://localhost:5173'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
 
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

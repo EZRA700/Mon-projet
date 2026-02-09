@@ -18,7 +18,7 @@ function Navbar({ setIsAuthenticated, user }) {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => navigate('/dashboard')}>
-              📝 Blog App
+              Lop-Market
             </h1>
           </div>
 

@@ -39,8 +39,8 @@ echo  Application demarree avec succes !
 echo ========================================
 echo.
 echo Acces a l'application :
-echo   - Frontend  : http://localhost:3000
-echo   - Backend   : http://localhost:5000
+echo   - Frontend  : http://localhost:3012
+echo   - Backend   : http://localhost:5012/api
 echo   - PostgreSQL: localhost:5432
 echo.
 echo Commandes utiles :

@@ -59,7 +59,7 @@ function Dashboard({ setIsAuthenticated }) {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
             <p className="text-gray-600 mt-1">
-              Gérez vos articles de blog
+              Gérez vos articles
             </p>
           </div>
           <button
