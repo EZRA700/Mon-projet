@@ -72,13 +72,14 @@ const getArticleById = async (req, res) => {
 // Créer un article
 const createArticle = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, imageUrl } = req.body;
     const authorId = req.user.id;
 
     const article = await prisma.article.create({
       data: {
         title,
         content,
+        imageUrl: imageUrl || null,
         authorId
       },
       include: {
@@ -108,7 +109,7 @@ const createArticle = async (req, res) => {
 const updateArticle = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const { title, content, imageUrl } = req.body;
     const userId = req.user.id;
 
     // Vérifier si l'article existe
@@ -134,7 +135,8 @@ const updateArticle = async (req, res) => {
       where: { id: parseInt(id) },
       data: {
         ...(title && { title }),
-        ...(content && { content })
+        ...(content && { content }),
+        ...(imageUrl !== undefined && { imageUrl: imageUrl || null })
       },
       include: {
         author: {

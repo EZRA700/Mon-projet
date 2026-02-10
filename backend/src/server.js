@@ -1,8 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const authRoutes = require('./routes/auth.routes');
 const articleRoutes = require('./routes/article.routes');
+const uploadRoutes = require('./routes/upload.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5012;
@@ -19,9 +21,13 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Servir les fichiers statiques (images uploadées)
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
+app.use('/api', uploadRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

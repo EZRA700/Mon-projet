@@ -50,7 +50,14 @@ export const articlesAPI = {
   getById: (id) => api.get(`/articles/${id}`),
   create: (data) => api.post('/articles', data),
   update: (id, data) => api.put(`/articles/${id}`, data),
-  delete: (id) => api.delete(`/articles/${id}`)
+  delete: (id) => api.delete(`/articles/${id}`),
+  uploadImage: (formData) => {
+    return api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
 };
 
 export default api;

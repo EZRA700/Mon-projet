@@ -6,8 +6,31 @@ function ArticleCard({ article, onDelete, onEdit, currentUserId }) {
     return new Date(dateString).toLocaleDateString('fr-FR', options);
   };
 
+  // Générer l'URL complète de l'image
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return null;
+    // Si c'est une URL relative (uploadée localement)
+    if (imageUrl.startsWith('/uploads/')) {
+      return `http://localhost:5012${imageUrl}`;
+    }
+    // Sinon c'est une URL externe
+    return imageUrl;
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+      {article.imageUrl && (
+        <div className="w-full h-48 overflow-hidden">
+          <img 
+            src={getImageUrl(article.imageUrl)} 
+            alt={article.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
       <div className="p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
           {article.title}

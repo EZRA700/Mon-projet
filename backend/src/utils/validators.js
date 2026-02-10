@@ -58,6 +58,10 @@ const createArticleValidators = [
     .withMessage('Le contenu est requis')
     .isLength({ min: 10 })
     .withMessage('Le contenu doit contenir au moins 10 caractères'),
+  body('imageUrl')
+    .optional({ nullable: true, checkFalsy: true })
+    .isURL()
+    .withMessage('L\'URL de l\'image doit être valide'),
   handleValidationErrors
 ];
 
@@ -75,6 +79,10 @@ const updateArticleValidators = [
     .trim()
     .isLength({ min: 10 })
     .withMessage('Le contenu doit contenir au moins 10 caractères'),
+  body('imageUrl')
+    .optional({ nullable: true, checkFalsy: true })
+    .isURL()
+    .withMessage('L\'URL de l\'image doit être valide'),
   handleValidationErrors
 ];
 

@@ -8,11 +8,15 @@ function EditArticle() {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     title: '',
-    content: ''
+    content: '',
+    imageUrl: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     fetchArticle();
@@ -24,8 +28,10 @@ function EditArticle() {
       const article = response.data.article;
       setFormData({
         title: article.title,
-        content: article.content
+        content: article.content,
+        imageUrl: article.imageUrl || ''
       });
+      setImagePreview(article.imageUrl || '');
     } catch (err) {
       setError('Article non trouvé');
       setTimeout(() => navigate('/dashboard'), 2000);
@@ -42,17 +48,67 @@ function EditArticle() {
     setError('');
   };
 
+  const handleImageFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setFormData(prev => ({ ...prev, imageUrl: '' }));
+    }
+  };
+
+  const handleImageUrlChange = (e) => {
+    const url = e.target.value;
+    setFormData(prev => ({ ...prev, imageUrl: url }));
+    setImagePreview(url);
+    if (url) {
+      setImageFile(null);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!imageFile) return null;
+
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      const response = await articlesAPI.uploadImage(formData);
+      return response.data.imageUrl;
+    } catch (err) {
+      console.error('Erreur upload:', err);
+      throw new Error('Erreur lors de l\'upload de l\'image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      await articlesAPI.update(id, formData);
+      let finalImageUrl = formData.imageUrl;
+
+      if (imageFile) {
+        finalImageUrl = await uploadImage();
+      }
+
+      await articlesAPI.update(id, {
+        ...formData,
+        imageUrl: finalImageUrl
+      });
       navigate('/dashboard');
     } catch (err) {
       setError(
         err.response?.data?.error?.message || 
+        err.message ||
         'Une erreur est survenue lors de la modification de l\'article'
       );
     } finally {
@@ -116,6 +172,63 @@ function EditArticle() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Image (optionnel)
+              </label>
+              
+              {/* Upload de fichier */}
+              <div className="mb-3">
+                <label htmlFor="imageFile" className="block text-sm text-gray-600 mb-1">
+                  📁 Uploader depuis votre ordinateur
+                </label>
+                <input
+                  type="file"
+                  id="imageFile"
+                  accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                  onChange={handleImageFileChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <p className="mt-1 text-xs text-gray-500">JPG, PNG, GIF ou WebP (max 5MB)</p>
+              </div>
+
+              {/* Séparateur */}
+              <div className="flex items-center my-3">
+                <div className="flex-1 border-t border-gray-300"></div>
+                <span className="px-3 text-sm text-gray-500">OU</span>
+                <div className="flex-1 border-t border-gray-300"></div>
+              </div>
+
+              {/* URL d'image */}
+              <div>
+                <label htmlFor="imageUrl" className="block text-sm text-gray-600 mb-1">
+                  🔗 Entrer une URL d'image
+                </label>
+                <input
+                  type="url"
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleImageUrlChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://exemple.com/image.jpg"
+                />
+              </div>
+
+              {/* Aperçu de l'image */}
+              {imagePreview && (
+                <div className="mt-3">
+                  <p className="text-sm text-gray-600 mb-2">Aperçu :</p>
+                  <img 
+                    src={imagePreview} 
+                    alt="Aperçu" 
+                    className="max-w-full h-48 object-cover rounded-lg border border-gray-300"
+                    onError={() => setImagePreview('')}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
                 Contenu
               </label>
@@ -135,10 +248,10 @@ function EditArticle() {
             <div className="flex gap-4">
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || uploadingImage}
                 className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-200 disabled:bg-blue-400 font-medium shadow-md"
               >
-                {loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
+                {uploadingImage ? 'Upload de l\'image...' : loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
               </button>
               <button
                 type="button"
