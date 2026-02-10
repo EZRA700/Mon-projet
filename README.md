@@ -1,447 +1,285 @@
-# 📝 Blog App - Application Full-Stack Conteneurisée
+# Lop-Market
 
-Une application web complète de gestion d'articles de blog construite avec React, Node.js, PostgreSQL et Docker. Cette application démontre une architecture full-stack moderne avec authentification JWT, CRUD complet et conteneurisation complète.
+Salut ! Bienvenue sur mon projet de boutique en ligne. C'est une application full-stack que j'ai développé avec React, Node.js et PostgreSQL. Tout est conteneurisé avec Docker pour faciliter le déploiement.
 
-## ⚡ Démarrage Rapide
+## Comment lancer le projet ?
 
-**Pour les utilisateurs qui veulent juste lancer l'application :**
+C'est super simple, juste besoin de Docker sur ta machine :
 
 ```bash
-# Windows
+# Si t'es sur Windows
 start.bat
 
-# Linux/Mac
+# Si t'es sur Linux/Mac
 ./start.sh
 
-# Ou manuellement
+# Ou directement avec docker-compose
 docker-compose up --build -d
 ```
 
-**Accès :**
-- Frontend : http://localhost:3012
-- API Backend : http://localhost:5012/api
+Une fois lancé, tu peux accéder à :
+- L'application : http://localhost:3012
+- L'API : http://localhost:5012/api
 
-📖 **Plus de détails ?** Voir [INSTALL.md](INSTALL.md) pour la documentation complète d'installation.
+C'est prêt ! 🚀
 
 ---
 
-## 🚀 Fonctionnalités
+## Ce que fait l'application
 
-- ✅ **Authentification complète** : Inscription, connexion, gestion de session JWT
-- ✅ **CRUD Articles** : Créer, lire, modifier et supprimer des articles
-- ✅ **Sécurité** : Hashage bcrypt, validation des tokens, protection des routes
-- ✅ **Interface moderne** : Design responsive avec Tailwind CSS
-- ✅ **Architecture conteneurisée** : Déploiement facile avec Docker Compose
-- ✅ **Base de données** : PostgreSQL avec Prisma ORM
-- ✅ **Validation** : Validation des inputs côté backend et frontend
+Bon alors en gros c'est une application de gestion d'articles de boutique. Voici ce qu'on peut faire :
 
-## 🛠️ Stack Technique
+- S'inscrire et se connecter (avec JWT pour la sécurité)
+- Créer des articles avec des images
+- Modifier et supprimer ses propres articles
+- Voir tous les articles des autres utilisateurs
+- Upload d'images depuis son ordinateur ou via URL
 
-### Frontend
-- **React 18** avec Vite
-- **Tailwind CSS** pour le styling
-- **React Router** pour la navigation
-- **Axios** pour les appels API
-- **Nginx** pour le serveur de production
+J'ai mis pas mal de travail sur la sécurité : les mots de passe sont hashés avec bcrypt, y'a de la validation partout, et seul l'auteur d'un article peut le modifier.
 
-### Backend
-- **Node.js** avec Express.js
-- **Prisma ORM** pour la base de données
-- **JWT** pour l'authentification
-- **bcryptjs** pour le hashage des mots de passe
-- **express-validator** pour la validation
+## Technologies utilisées
+
+### Côté Frontend
+- React 18 (avec Vite parce que c'est rapide)
+- Tailwind CSS pour le design
+- React Router pour la navigation
+- Axios pour les requêtes HTTP
+- Nginx pour servir en production
+
+### Côté Backend  
+- Node.js + Express (classique mais efficace)
+- Prisma comme ORM (super pratique pour gérer la DB)
+- JWT pour l'authentification
+- bcryptjs pour hasher les passwords
+- Multer pour gérer l'upload de fichiers
 
 ### Base de données
-- **PostgreSQL 16** (conteneurisée)
+- PostgreSQL 16 dans un container Docker
 
 ### DevOps
-- **Docker** & **Docker Compose**
-- Multi-stage builds pour l'optimisation
+- Docker & Docker Compose
+- Multi-stage builds pour optimiser les images
 
-## 📋 Prérequis
+## Installation
 
-- **Docker** (version 20.10+)
-- **Docker Compose** (version 2.0+)
+### Ce dont tu as besoin
 
-C'est tout ! Pas besoin de Node.js, PostgreSQL ou autre outil localement.
+Juste Docker Desktop installé sur ta machine, c'est tout. Pas besoin d'installer Node.js ou PostgreSQL.
 
-## 🔧 Installation
+### Les étapes
 
-### 1. Cloner le projet
+1. Clone le repo
 ```bash
-git clone <votre-repo>
-cd mon-projet
+git clone <ton-repo>
+cd "Mon projet"
 ```
 
-### 2. Configurer les variables d'environnement
+2. Normalement le fichier .env existe déjà à la racine. Si jamais il manque :
 ```bash
 cp .env.example .env
 ```
 
-Éditez le fichier `.env` et modifiez les valeurs selon vos besoins :
+Le fichier .env contient les configs importantes :
 ```env
-# Variables PostgreSQL
-POSTGRES_USER=user
-POSTGRES_PASSWORD=mot_de_passe_securise
-POSTGRES_DB=mydb
+# Config PostgreSQL
+POSTGRES_USER=bloguser
+POSTGRES_PASSWORD=SecurePassword123
+POSTGRES_DB=blogdb
 
-# Variables Backend
-DATABASE_URL=postgresql://user:mot_de_passe_securise@postgres:5432/mydb
-JWT_SECRET=votre_secret_jwt_ultra_securise_123456789
+# Config Backend
+DATABASE_URL=postgresql://bloguser:SecurePassword123@postgres:5432/blogdb
+JWT_SECRET=ton_super_secret_ultra_long
 PORT=5000
 NODE_ENV=production
 
-# Variables Frontend
+# Config Frontend
 VITE_API_URL=http://localhost:5012/api
 ```
 
-⚠️ **Important** : Changez absolument `JWT_SECRET` et `POSTGRES_PASSWORD` en production !
+**IMPORTANT** : Change le JWT_SECRET et le password en prod !
 
-### 3. Lancer l'application
+3. Lance tout avec Docker
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 
-L'application sera accessible à :
-- **Frontend** : http://localhost:3012
-- **Backend API** : http://localhost:5012/api
-- **PostgreSQL** : localhost:5432
+Ça va prendre quelques minutes la première fois (téléchargement des images Docker, installation des dépendances, etc.)
 
-## 📚 Documentation API
+L'app sera disponible sur http://localhost:3012
 
-### Authentication
+## Comment utiliser l'API
 
-#### POST `/api/auth/register`
-Inscription d'un nouvel utilisateur.
+### Inscription
 
-**Body :**
+**POST** `/api/auth/register`
+
+Envoie ça :
 ```json
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
+  "name": "Ton Nom",
+  "email": "ton@email.com",
+  "password": "motdepasse123"
 }
 ```
 
-**Response (201) :**
+Tu reçois un token JWT en retour pour t'authentifier.
+
+### Connexion
+
+**POST** `/api/auth/login`
+
 ```json
 {
-  "message": "Utilisateur créé avec succès",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com",
-    "createdAt": "2026-02-09T10:00:00.000Z"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "email": "ton@email.com",
+  "password": "motdepasse123"
 }
 ```
 
-#### POST `/api/auth/login`
-Connexion d'un utilisateur existant.
+Pareil, tu récupères ton token.
 
-**Body :**
+### Récupérer tous les articles
+
+**GET** `/api/articles`
+
+Pas besoin d'être connecté pour ça, c'est public.
+
+### Créer un article  
+
+**POST** `/api/articles`
+
+Ajoute ton token dans les headers :
+```
+Authorization: Bearer ton_token_ici
+```
+
+Et envoie :
 ```json
 {
-  "email": "john@example.com",
-  "password": "password123"
+  "title": "Mon article",
+  "content": "Le contenu...",
+  "imageUrl": "https://exemple.com/image.jpg"
 }
 ```
 
-**Response (200) :**
-```json
-{
-  "message": "Connexion réussie",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
+L'imageUrl est optionnel.
 
-### Articles
+### Modifier un article
 
-#### GET `/api/articles`
-Récupère tous les articles (public).
+**PUT** `/api/articles/:id`
 
-**Response (200) :**
-```json
-{
-  "message": "Articles récupérés avec succès",
-  "count": 2,
-  "articles": [
-    {
-      "id": 1,
-      "title": "Mon premier article",
-      "content": "Contenu de l'article...",
-      "authorId": 1,
-      "author": {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com"
-      },
-      "createdAt": "2026-02-09T10:00:00.000Z",
-      "updatedAt": "2026-02-09T10:00:00.000Z"
-    }
-  ]
-}
-```
+Faut être l'auteur de l'article, sinon ça renvoie une erreur 403.
 
-#### GET `/api/articles/:id`
-Récupère un article spécifique (public).
+### Supprimer un article  
 
-**Response (200) :**
-```json
-{
-  "message": "Article récupéré avec succès",
-  "article": {
-    "id": 1,
-    "title": "Mon premier article",
-    "content": "Contenu de l'article...",
-    "authorId": 1,
-    "author": {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "createdAt": "2026-02-09T10:00:00.000Z",
-    "updatedAt": "2026-02-09T10:00:00.000Z"
-  }
-}
-```
+**DELETE** `/api/articles/:id`
 
-#### POST `/api/articles`
-Crée un nouvel article (authentification requise).
+Pareil, faut être l'auteur.
 
-**Headers :**
-```
-Authorization: Bearer <token>
-```
+### Upload d'image
 
-**Body :**
-```json
-{
-  "title": "Mon nouvel article",
-  "content": "Le contenu de mon article..."
-}
-```
+**POST** `/api/upload`
 
-**Response (201) :**
-```json
-{
-  "message": "Article créé avec succès",
-  "article": {
-    "id": 2,
-    "title": "Mon nouvel article",
-    "content": "Le contenu de mon article...",
-    "authorId": 1,
-    "author": {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "createdAt": "2026-02-09T11:00:00.000Z",
-    "updatedAt": "2026-02-09T11:00:00.000Z"
-  }
-}
-```
+Utilise FormData pour envoyer ton fichier. L'API accepte JPG, PNG, GIF et WebP jusqu'à 5MB.
 
-#### PUT `/api/articles/:id`
-Modifie un article existant (authentification requise + être l'auteur).
-
-**Headers :**
-```
-Authorization: Bearer <token>
-```
-
-**Body :**
-```json
-{
-  "title": "Titre modifié",
-  "content": "Contenu modifié..."
-}
-```
-
-**Response (200) :**
-```json
-{
-  "message": "Article mis à jour avec succès",
-  "article": {
-    "id": 1,
-    "title": "Titre modifié",
-    "content": "Contenu modifié...",
-    "authorId": 1,
-    "author": {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com"
-    },
-    "createdAt": "2026-02-09T10:00:00.000Z",
-    "updatedAt": "2026-02-09T12:00:00.000Z"
-  }
-}
-```
-
-#### DELETE `/api/articles/:id`
-Supprime un article (authentification requise + être l'auteur).
-
-**Headers :**
-```
-Authorization: Bearer <token>
-```
-
-**Response (200) :**
-```json
-{
-  "message": "Article supprimé avec succès"
-}
-```
-
-### Codes d'erreur
-
-- **400** : Erreur de validation
-- **401** : Non authentifié ou token invalide
-- **403** : Non autorisé (pas l'auteur)
-- **404** : Ressource non trouvée
-- **500** : Erreur serveur
-
-## 📁 Structure du Projet
+## Structure des dossiers
 
 ```
-mon-projet/
-├── frontend/                    # Application React
+Mon projet/
+├── frontend/                # App React
 │   ├── src/
-│   │   ├── components/          # Composants réutilisables
-│   │   │   ├── Navbar.jsx
-│   │   │   └── ArticleCard.jsx
-│   │   ├── pages/               # Pages de l'application
-│   │   │   ├── Register.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── CreateArticle.jsx
-│   │   │   └── EditArticle.jsx
-│   │   ├── services/            # Services API
-│   │   │   └── api.js
-│   │   ├── App.jsx              # Composant principal
-│   │   ├── main.jsx             # Point d'entrée
-│   │   └── index.css            # Styles globaux
-│   ├── Dockerfile               # Configuration Docker
-│   ├── nginx.conf               # Configuration Nginx
-│   ├── package.json
-│   ├── vite.config.js
-│   └── tailwind.config.js
+│   │   ├── components/      # Composants réutilisables
+│   │   ├── pages/          # Les pages (Login, Dashboard, etc.)
+│   │   └── services/       # Config API avec Axios
+│   └── Dockerfile
 │
-├── backend/                     # API Node.js
+├── backend/                 # API Express
 │   ├── src/
-│   │   ├── controllers/         # Logique métier
-│   │   │   ├── auth.controller.js
-│   │   │   └── article.controller.js
-│   │   ├── routes/              # Routes API
-│   │   │   ├── auth.routes.js
-│   │   │   └── article.routes.js
-│   │   ├── middlewares/         # Middlewares
-│   │   │   └── auth.js
-│   │   ├── utils/               # Utilitaires
-│   │   │   └── validators.js
-│   │   └── server.js            # Point d'entrée
-│   ├── prisma/
-│   │   └── schema.prisma        # Schéma de base de données
-│   ├── Dockerfile               # Configuration Docker
-│   └── package.json
+│   │   ├── controllers/    # Logique métier
+│   │   ├── routes/         # Routes de l'API
+│   │   ├── middlewares/    # Auth et autres middlewares
+│   │   └── utils/          # Validators
+│   ├── prisma/             # Schéma DB + migrations
+│   └── Dockerfile
 │
-├── docker-compose.yml           # Orchestration Docker
-├── .env.example                 # Variables d'environnement exemple
-├── .gitignore
-└── README.md
+└── docker-compose.yml      # Config Docker
 ```
 
-## 🔐 Sécurité
+## Sécurité
 
-- **Hashage des mots de passe** : bcrypt avec 10 rounds
-- **JWT** : Tokens avec expiration de 24h
-- **CORS** : Configuré pour accepter les requêtes cross-origin
-- **Validation** : Inputs validés côté backend avec express-validator
-- **Protection des routes** : Middleware d'authentification sur routes sensibles
-- **Users non-root** : Containers exécutés avec utilisateurs non-root
-- **Secrets** : Jamais hardcodés, toujours via variables d'environnement
+J'ai fait attention à la sécu :
+- Mots de passe hashés avec bcrypt (10 rounds)
+- Tokens JWT qui expirent après 24h
+- Validation des inputs côté backend
+- CORS configuré correctement
+- Containers qui tournent avec des users non-root
+- Jamais de secrets dans le code (tout en variables d'env)
 
-## 🧪 Tester l'application
+## Tester l'application
 
-1. Accédez à http://localhost:3000
-2. Créez un compte via la page d'inscription
-3. Connectez-vous avec vos identifiants
-4. Créez, modifiez et supprimez des articles
+1. Va sur http://localhost:3012
+2. Inscris-toi avec un email et un mot de passe
+3. Connecte-toi
+4. Crée ton premier article (avec ou sans image)
+5. Teste la modification et la suppression
 
-## 🐳 Commandes Docker utiles
+## Commandes Docker utiles
 
 ```bash
-# Démarrer les conteneurs
-docker-compose up
-
-# Démarrer en mode détaché
-docker-compose up -d
-
-# Rebuild les images
-docker-compose up --build
-
-# Arrêter les conteneurs
-docker-compose down
-
-# Arrêter et supprimer les volumes
-docker-compose down -v
-
 # Voir les logs
 docker-compose logs -f
 
-# Voir les logs d'un service spécifique
+# Logs d'un service spécifique
 docker-compose logs -f backend
 
-# Accéder au shell d'un conteneur
+# Arrêter tout
+docker-compose down
+
+# Tout supprimer (y compris les données)
+docker-compose down -v
+
+# Redémarrer un service
+docker-compose restart backend
+
+# Ouvrir un shell dans le container
 docker-compose exec backend sh
-docker-compose exec postgres psql -U user -d mydb
 ```
 
-## 🔄 Migrations Prisma
+## Trucs à savoir sur Prisma
 
-Les migrations sont automatiquement exécutées au démarrage du backend. Pour créer une nouvelle migration :
+Les migrations se lancent automatiquement au démarrage. Si tu veux créer une nouvelle migration :
 
 ```bash
-# Accéder au conteneur backend
 docker-compose exec backend sh
+npx prisma migrate dev --name ma_migration
+```
 
-# Créer une migration
-npx prisma migrate dev --name nom_migration
-
-# Générer le client Prisma
-npx prisma generate
-
-# Ouvrir Prisma Studio
+Pour voir la DB avec Prisma Studio :
+```bash
+docker-compose exec backend sh
 npx prisma studio
 ```
 
-## 🚀 Déploiement en Production
+## Pour la prod
 
-1. Modifiez les variables d'environnement dans `.env`
-2. Utilisez des secrets forts pour `JWT_SECRET` et `POSTGRES_PASSWORD`
-3. Configurez un reverse proxy (nginx, traefik) si nécessaire
-4. Activez HTTPS avec Let's Encrypt
-5. Configurez les backups de la base de données
-6. Surveillez les logs et performances
+Si tu veux le mettre en production :
+1. Change tous les secrets dans le .env
+2. Configure un reverse proxy (nginx ou traefik)
+3. Active HTTPS avec Let's Encrypt
+4. Mets en place des backups de la DB
+5. Surveille les logs
 
-## 🤝 Contribution
+## Améliorations possibles
 
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
-
-## 📝 Licence
-
-Ce projet est sous licence MIT.
-
-## 👨‍💻 Auteur
-
-Développé avec ❤️ par un développeur full-stack junior passionné.
+Y'a plein de trucs que je pourrais ajouter :
+- Pagination des articles
+- Recherche et filtres
+- Système de likes/commentaires
+- Reset de password par email
+- Tests unitaires et E2E
+- CI/CD avec GitHub Actions
+- Stockage des images sur un CDN type S3
 
 ---
 
-**Note** : Ce projet est un exemple éducatif. Pour une utilisation en production, ajoutez des tests, de la surveillance, et renforcez la sécurité.
+Voilà c'est tout ! Si t'as des questions ou des suggestions, hésite pas.
+
